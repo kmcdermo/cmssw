@@ -64,8 +64,11 @@ hConversionsToken_ = consumes<reco::ConversionCollection>(iConfig.getParameter<e
   }
   // PFCluster Isolation maps
   addPFClusterIso_   = iConfig.getParameter<bool>("addPFClusterIso");
-  ecalPFClusterIsoT_ = consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("ecalPFClusterIsoMap"));
-  hcalPFClusterIsoT_ = consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("hcalPFClusterIsoMap"));
+  if (addPFClusterIso_)
+  {
+    ecalPFClusterIsoT_ = consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("ecalPFClusterIsoMap"));
+    hcalPFClusterIsoT_ = consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("hcalPFClusterIsoMap"));
+  }
   // photon ID configurables
   addPhotonID_ = iConfig.getParameter<bool>( "addPhotonID" );
   if (addPhotonID_) {
@@ -106,7 +109,7 @@ hConversionsToken_ = consumes<reco::ConversionCollection>(iConfig.getParameter<e
   }
   // produces vector of photons
   produces<std::vector<Photon> >();
-
+  
   // read isoDeposit labels, for direct embedding
   readIsolationLabels(iConfig, "isoDeposits", isoDepositLabels_, isoDepositTokens_);
   // read isolation value labels, for direct embedding

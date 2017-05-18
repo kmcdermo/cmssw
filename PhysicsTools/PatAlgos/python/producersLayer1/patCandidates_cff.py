@@ -4,6 +4,7 @@ from PhysicsTools.PatAlgos.producersLayer1.electronProducer_cff import *
 from PhysicsTools.PatAlgos.producersLayer1.muonProducer_cff import *
 from PhysicsTools.PatAlgos.producersLayer1.tauProducer_cff import *
 from PhysicsTools.PatAlgos.producersLayer1.photonProducer_cff import *
+from PhysicsTools.PatAlgos.producersLayer1.ootPhotonProducer_cff import *
 from PhysicsTools.PatAlgos.producersLayer1.jetProducer_cff import *
 from PhysicsTools.PatAlgos.producersLayer1.metProducer_cff import *
 
@@ -15,6 +16,7 @@ patCandidateSummary = cms.EDAnalyzer("CandidateSummaryTable",
         cms.InputTag("patMuons"),
         cms.InputTag("patTaus"),
         cms.InputTag("patPhotons"),
+        cms.InputTag("patOOTPhotons"),
         cms.InputTag("patJets"),
         cms.InputTag("patMETs"),
     )
@@ -26,6 +28,7 @@ patCandidates = cms.Sequence(
     makePatMuons     +
     makePatTaus      +
     makePatPhotons   +
+    makePatOOTPhotons+
     makePatJets      +
     makePatMETs      +
     patCandidateSummary
