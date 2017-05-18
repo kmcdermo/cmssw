@@ -6,8 +6,9 @@ import FWCore.ParameterSet.Config as cms
 # are not stored in the event!
 from RecoParticleFlow.PFProducer.particleFlowEGamma_cfi import *
 from RecoEgamma.EgammaPhotonProducers.gedPhotonSequence_cff import *
+from RecoEgamma.EgammaPhotonProducers.mustacheOOTPhotonSequence_cff import *
 from RecoEgamma.EgammaElectronProducers.gedGsfElectronSequence_cff import *
 from RecoEgamma.EgammaElectronProducers.pfBasedElectronIso_cff import *
 
-particleFlowEGammaFull = cms.Sequence(particleFlowEGamma*gedGsfElectronSequenceTmp*gedPhotonSequenceTmp)
+particleFlowEGammaFull = cms.Sequence(particleFlowEGamma*gedGsfElectronSequenceTmp*gedPhotonSequenceTmp*mustacheOOTPhotonSequence)
 particleFlowEGammaFinal = cms.Sequence(gedPhotonSequence*gedElectronPFIsoSequence)
