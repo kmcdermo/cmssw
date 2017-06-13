@@ -82,8 +82,11 @@ GEDPhotonProducer::GEDPhotonProducer(const edm::ParameterSet& config) :
 
   }
 
-  pfEgammaCandidates_      = 
-    consumes<reco::PFCandidateCollection>(conf_.getParameter<edm::InputTag>("pfEgammaCandidates"));
+
+  if ( reconstructionStep_ != "oot") {
+    pfEgammaCandidates_      = 
+      consumes<reco::PFCandidateCollection>(conf_.getParameter<edm::InputTag>("pfEgammaCandidates"));
+  }
   barrelEcalHits_   = 
     consumes<EcalRecHitCollection>(conf_.getParameter<edm::InputTag>("barrelEcalHits"));
   endcapEcalHits_   = 
@@ -106,8 +109,10 @@ GEDPhotonProducer::GEDPhotonProducer(const edm::ParameterSet& config) :
   runMIPTagger_       = conf_.getParameter<bool>("runMIPTagger");
 
   candidateP4type_ = config.getParameter<std::string>("candidateP4type") ;
-  valueMapPFCandPhoton_ = config.getParameter<std::string>("valueMapPhotons");
 
+  if ( reconstructionStep_ != "oot") {
+    valueMapPFCandPhoton_ = config.getParameter<std::string>("valueMapPhotons");
+  }
 
   edm::ParameterSet posCalcParameters = 
     config.getParameter<edm::ParameterSet>("posCalcParameters");
@@ -201,8 +206,10 @@ GEDPhotonProducer::GEDPhotonProducer(const edm::ParameterSet& config) :
   }
   // Register the product
   produces< reco::PhotonCollection >(photonCollection_);
-  produces< edm::ValueMap<reco::PhotonRef> > (valueMapPFCandPhoton_);
 
+  if ( reconstructionStep_ != "oot") {
+    produces< edm::ValueMap<reco::PhotonRef> > (valueMapPFCandPhoton_);
+  }
 
 }
 
@@ -304,10 +311,13 @@ void GEDPhotonProducer::produce(edm::Event& theEvent, const edm::EventSetup& the
 
   Handle<reco::PFCandidateCollection> pfEGCandidateHandle;
   // Get the  PF refined cluster  collection
-  theEvent.getByToken(pfEgammaCandidates_,pfEGCandidateHandle);
-  if (!pfEGCandidateHandle.isValid()) {
-    throw cms::Exception("GEDPhotonProducer") 
-      << "Error! Can't get the pfEgammaCandidates";
+  if ( reconstructionStep_ != "oot" )
+  {
+    theEvent.getByToken(pfEgammaCandidates_,pfEGCandidateHandle);
+    if (!pfEGCandidateHandle.isValid()) {
+      throw cms::Exception("GEDPhotonProducer") 
+	<< "Error! Can't get the pfEgammaCandidates";
+    }
   }
   
   Handle<reco::PFCandidateCollection> pfCandidateHandle;
@@ -407,7 +417,7 @@ void GEDPhotonProducer::produce(edm::Event& theEvent, const edm::EventSetup& the
   const edm::OrphanHandle<reco::PhotonCollection> photonOrphHandle = theEvent.put(std::move(outputPhotonCollection_p), photonCollection_);
 
 
-  if ( reconstructionStep_ != "final" ) { 
+  if ( reconstructionStep_ != "final" && reconstructionStep_ != "oot" ) { 
     //// Define the value map which associate to each  Egamma-unbiassaed candidate (key-ref) the corresponding PhotonRef 
     auto pfEGCandToPhotonMap_p = std::make_unique<edm::ValueMap<reco::PhotonRef>>();
     edm::ValueMap<reco::PhotonRef>::Filler filler(*pfEGCandToPhotonMap_p);
