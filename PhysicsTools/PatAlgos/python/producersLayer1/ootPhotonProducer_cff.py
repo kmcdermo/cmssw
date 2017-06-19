@@ -50,7 +50,36 @@ makePatOOTPhotonsTask = cms.Task(
 
 makePatOOTPhotons = cms.Sequence(makePatOOTPhotonsTask)
 
+## For legacy reprocessing
+## Standard Sequences
+from RecoParticleFlow.PFClusterProducer.particleFlowRecHitPS_cfi import *
+from RecoParticleFlow.PFClusterProducer.particleFlowClusterPS_cfi import *
+## OOT Sequences
+from RecoParticleFlow.PFClusterProducer.particleFlowRecHitOOTECAL_cff import *
+from RecoParticleFlow.PFClusterProducer.particleFlowClusterOOTECALUncorrected_cff import *
+from RecoParticleFlow.PFClusterProducer.particleFlowClusterOOTECAL_cff import *
+from RecoEcal.EgammaClusterProducers.particleFlowSuperClusterOOTECAL_cff import *
+from RecoEgamma.EgammaPhotonProducers.ootPhotonCore_cff import *
+from RecoEgamma.EgammaPhotonProducers.ootPhotons_cff import *
+
+_makePatOOTPhotonsTask = makePatOOTPhotonsTask.copy()
+_makePatOOTPhotonsTask.add(
+    particleFlowRecHitOOTECAL,
+    particleFlowRecHitPS,
+    particleFlowClusterOOTECALUncorrected,
+    particleFlowClusterPS,
+    particleFlowClusterOOTECAL,
+    particleFlowSuperClusterOOTECAL,
+    ootPhotonCore,
+    ootPhotons
+)
+
 from Configuration.Eras.Modifier_run2_miniAOD_80XLegacy_cff import run2_miniAOD_80XLegacy
-run2_miniAOD_80XLegacy.toModify(patOOTPhotons, 
-        hcalPFClusterIsoMap = ""
+run2_miniAOD_80XLegacy.toModify(
+    patOOTPhotons, 
+    hcalPFClusterIsoMap = ""
+)
+
+run2_miniAOD_80XLegacy.toReplaceWith(
+    makePatOOTPhotonsTask, _makePatOOTPhotonsTask
 )

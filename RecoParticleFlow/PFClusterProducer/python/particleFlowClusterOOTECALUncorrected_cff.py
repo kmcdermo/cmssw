@@ -3,4 +3,3 @@ from RecoParticleFlow.PFClusterProducer.particleFlowClusterECALUncorrected_cfi i
 
 particleFlowClusterOOTECALUncorrected = particleFlowClusterECALUncorrected.clone()
 particleFlowClusterOOTECALUncorrected.recHitsSource = cms.InputTag("particleFlowRecHitOOTECAL")
-
