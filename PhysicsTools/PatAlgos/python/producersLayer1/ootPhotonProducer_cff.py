@@ -52,6 +52,8 @@ makePatOOTPhotons = cms.Sequence(makePatOOTPhotonsTask)
 
 ## For legacy reprocessing
 ## Standard Sequences
+from RecoJets.Configuration.CaloTowersES_cfi import *
+from RecoLocalCalo.EcalRecAlgos.EcalSeverityLevelESProducer_cfi import *
 from RecoParticleFlow.PFClusterProducer.particleFlowRecHitPS_cfi import *
 from RecoParticleFlow.PFClusterProducer.particleFlowClusterPS_cfi import *
 ## OOT Sequences
@@ -61,17 +63,22 @@ from RecoParticleFlow.PFClusterProducer.particleFlowClusterOOTECAL_cff import *
 from RecoEcal.EgammaClusterProducers.particleFlowSuperClusterOOTECAL_cff import *
 from RecoEgamma.EgammaPhotonProducers.ootPhotonCore_cff import *
 from RecoEgamma.EgammaPhotonProducers.ootPhotons_cff import *
+from RecoEgamma.EgammaIsolationAlgos.pfClusterIsolation_cfi import *
 
 _makePatOOTPhotonsTask = makePatOOTPhotonsTask.copy()
 _makePatOOTPhotonsTask.add(
-    particleFlowRecHitOOTECAL,
+    CaloTowerConstituentsMapBuilder,
+    essourceEcalSev,
+    ecalSeverityLevel,
     particleFlowRecHitPS,
-    particleFlowClusterOOTECALUncorrected,
     particleFlowClusterPS,
+    particleFlowRecHitOOTECAL,
+    particleFlowClusterOOTECALUncorrected,
     particleFlowClusterOOTECAL,
     particleFlowSuperClusterOOTECAL,
     ootPhotonCore,
-    ootPhotons
+    ootPhotons,
+    ootPhotonEcalPFClusterIsolationProducer
 )
 
 from Configuration.Eras.Modifier_run2_miniAOD_80XLegacy_cff import run2_miniAOD_80XLegacy

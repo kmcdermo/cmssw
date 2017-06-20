@@ -12,8 +12,16 @@ del ootPhotons.regressionConfig
 
 from Configuration.Eras.Modifier_run2_miniAOD_80XLegacy_cff import run2_miniAOD_80XLegacy
 
-run2_miniAOD_80XLegacy.toModify(ootPhotons, barrelEcalHits = "reducedEcalRecHitsEB")
-run2_miniAOD_80XLegacy.toModify(ootPhotons, endcapEcalHits = "reducedEcalRecHitsEE")
-run2_miniAOD_80XLegacy.toModify(ootPhotons, preshowerHits = "reducedEcalRecHitsES")
-run2_miniAOD_80XLegacy.toModify(ootPhotons, hcalTowers = "")
-
+run2_miniAOD_80XLegacy.toModify(
+    ootPhotons, 
+    barrelEcalHits = "reducedEcalRecHitsEB",
+    endcapEcalHits = "reducedEcalRecHitsEE",
+    preshowerHits = "reducedEcalRecHitsES",
+    hcalTowers = ""
+)
+run2_miniAOD_80XLegacy.toModify(
+    ootPhotons.isolationSumsCalculatorSet, 
+    barrelEcalRecHitCollection = "reducedEcalRecHitsEB",
+    endcapEcalRecHitCollection = "reducedEcalRecHitsEE",
+    HcalRecHitCollection = ""
+)
