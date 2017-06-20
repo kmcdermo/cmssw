@@ -25,3 +25,8 @@ run2_miniAOD_80XLegacy.toModify(
     endcapEcalRecHitCollection = "reducedEcalRecHitsEE",
     HcalRecHitCollection = ""
 )
+run2_miniAOD_80XLegacy.toModify(
+    ootPhotons.mipVariableSet,
+    barrelEcalRecHitCollection = "reducedEcalRecHitsEB",
+    endcapEcalRecHitCollection = "reducedEcalRecHitsEE",
+)
