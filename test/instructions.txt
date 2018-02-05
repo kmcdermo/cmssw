@@ -1,0 +1,18 @@
+cmsrel CMSSW_9_3_6_patch1
+cd CMSSW_9_3_6_patch1/src
+cmsenv
+git cmd-init
+
+git cms-addpkg IOMC/ParticleGuns
+git cms-addpkg IOMC/EventVertexGenerators
+git cms-addpkg Configuration/Generator/python
+
+scram b -j 8
+
+git remote rename my-cmssw kmcdermo
+git fetch kmcdermo 936p1_gen
+git checkout 936p1_gen
+
+scram b -j 8
+
+cmsDriver.py Configuration/Generator/python/SingleGammaFlatPt20To1000_pythia8_cfi.py --mc --eventcontent RAWSIM --datatier GEN-SIM --conditions 93X_mc2017_realistic_v3 --beamspot Flat --step GEN,SIM --nThreads 4 --geometry DB:Extended --era Run2_2017 --fileout file:step0.root -n 10 --no_exec
