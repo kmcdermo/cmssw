@@ -219,16 +219,20 @@ def psetPhoFull5x5SigmaIEtaIEtaCut(wpEB, wpEE):
         isIgnored = cms.bool(False)
         )
 #Configure Cut on Smaj
-def psetPhoSMajCut(wpEB, wpEE):
+def psetPhoSMajCut(wpEB, wpEE,isoInputs):
     print "pset loaded"
-    return cms.PSet(
-        cutName = cms.string('PhoSMajCut'),
-        cutValueEB = cms.double( wpEB.smajCut ),
-        cutValueEE = cms.double( wpEE.smajCut ),
-        smajMap = cms.InputTag('photonIDValueMapProducer:phoFull5x5SigmaIEtaIEta'),
+    return cms.PSet( 
+        cutName = cms.string('PhoSMajCut'), 
+        # Both barrel and endcap: cut = c1 + pt*c2
+        C1_EB = cms.double( wpEB.smajCut ),
+        C2_EB = cms.double( wpEB.smajCut ),
+        C1_EE = cms.double( wpEE.smajCut ),
+        C2_EE = cms.double( wpEE.smajCut ),
+        sMajMap = cms.InputTag( 'photonIDValueMapProducer:phoSmaj'),#isoInputs.PFClusterECalIsolationMapName ),
         barrelCutOff = cms.double(ebCutOff),
-        needsAdditionalProducts = cms.bool(False),
-        isIgnored = cms.bool(False)
+        useRelativeIso = cms.bool(False),
+        needsAdditionalProducts = cms.bool(True),
+        isIgnored = cms.bool(False),
         )
 
 # Configure the cut on the charged hadron isolation that uses
@@ -605,7 +609,7 @@ def configureVIDCutBasedPhoID_OOT_V1( wpEB, wpEE, isoInputs ):
             psetPhoSCEtaMultiRangeCut(),                              # eta cut
             psetPhoSingleTowerHadOverEmCut(wpEB,wpEE),                # H/E cut
             psetPhoFull5x5SigmaIEtaIEtaCut(wpEB,wpEE),                # full 5x5 sigmaIEtaIEta cut
-            psetPhoSMajCut(wpEB,wpEE),
+            psetPhoSMajCut(wpEB,wpEE,isoInputs),
             psetTrkIsoWithEALinScalingCut(wpEB,wpEE,isoInputs),     # charged hadron isolation cut
             psetPFClusterHCalIsoWithEALinScalingCut(wpEB,wpEE,isoInputs),   # neutral hadron isolation cut
             psetPFClusterECalIsoWithEALinScalingCut(wpEB,wpEE,isoInputs)        # photon isolation cut
