@@ -95,7 +95,6 @@ operator()(const reco::PhotonPtr& cand) const{
   
 
   const float sMaj =  _sMajMap.isValid() ? smajval : pat->userFloat(inst_name);
-  std::cout<<"inside cuts: "<<sMaj<< " cut value: "<<sMajCutValue<<std::endl;
   // Apply the cut and return the result
   // Scale by pT if the relative isolation is requested but avoid division by 0
   return sMaj < sMajCutValue;
