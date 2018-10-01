@@ -122,7 +122,7 @@ value(const reco::CandidatePtr& cand) const {
 
   // Figure out the cut value
   // The value is generally pt-dependent: C1 + pt * C2
-  double absEta = std::abs(pho->superCluster()->eta());  
+  //  double absEta = std::abs(pho->superCluster()->eta());  
   
   float sMaj =_sMajMap.isValid() ? smajval : pat->userFloat(inst_name);
 
