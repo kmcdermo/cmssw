@@ -20,11 +20,12 @@ def _setupOOTPhotonPostRECOSequenceMiniAOD(process):
     process.calibratedPatPhotons.produceCalibratedObjs = False 
 
     process.egmPhotonIDs.physicsObjectSrc = phoSrc
+    process.photonMVAValueMapProducer.src = phoSrc
     process.photonIDValueMapProducer.srcMiniAOD = phoSrc
     process.egmPhotonIsolation.srcToIsolate = phoSrc
 
     from RecoEgamma.EgammaTools.egammaObjectModificationsInMiniAOD_cff import egamma_modifications
-    from RecoEgamma.EgammaTools.photonObjectModifications_tool import makeVIDBitsModifier,makeVIDinPATIDsModifier,makeEnergyScaleAndSmearingSysModifier  
+    from RecoEgamma.EgammaTools.photonObjectModifications_tools import makeVIDBitsModifier,makeVIDinPATIDsModifier,makeEnergyScaleAndSmearingSysModifier  
     
     egamma_modifications.append(makeVIDBitsModifier(process,"egmPhotonIDs"))
     egamma_modifications.append(makeVIDinPATIDsModifier(process,"egmPhotonIDs"))
