@@ -1,11 +1,12 @@
 import FWCore.ParameterSet.Config as cms
 
 #define the default IDs to produce in VID
-_defaultPhoIDModules =  [ 
-                          'RecoEgamma.PhotonIdentification.Identification.cutBasedPhotonID_Fall17_94X_V1_TrueVtx_cff',
-                        ]
+_defaultPhoIDModules = [ 
+                         'RecoEgamma.PhotonIdentification.Identification.cutBasedPhotonID_Fall17_94X_V1_TrueVtx_cff',
+                         'RecoEgamma.PhotonIdentification.Identification.cutBasedPhotonID_Fall17_94X_OOT_V1_cff',
+                       ]
 
-def _setupEgammaPostRECOSequenceMiniAOD(process):
+def _setupOOTPhotonPostRECOSequenceMiniAOD(process):
     
     phoSrc = cms.InputTag('slimmedOOTPhotons',processName=cms.InputTag.skipCurrentProcess())
     phoCalibSrc = cms.InputTag('slimmedOOTPhotons',processName=cms.InputTag.skipCurrentProcess())
@@ -19,12 +20,11 @@ def _setupEgammaPostRECOSequenceMiniAOD(process):
     process.calibratedPatPhotons.produceCalibratedObjs = False 
 
     process.egmPhotonIDs.physicsObjectSrc = phoSrc
-    process.photonMVAValueMapProducer.srcMiniAOD = phoSrc
     process.photonIDValueMapProducer.srcMiniAOD = phoSrc
     process.egmPhotonIsolation.srcToIsolate = phoSrc
 
     from RecoEgamma.EgammaTools.egammaObjectModificationsInMiniAOD_cff import egamma_modifications
-    from RecoEgamma.EgammaTools.egammaObjectModifications_tools_PhotonOnly import makeVIDBitsModifier,makeVIDinPATIDsModifier,makeEnergyScaleAndSmearingSysModifier  
+    from RecoEgamma.EgammaTools.photonObjectModifications_tool import makeVIDBitsModifier,makeVIDinPATIDsModifier,makeEnergyScaleAndSmearingSysModifier  
     
     egamma_modifications.append(makeVIDBitsModifier(process,"egmPhotonIDs"))
     egamma_modifications.append(makeVIDinPATIDsModifier(process,"egmPhotonIDs"))
@@ -39,9 +39,9 @@ def _setupEgammaPostRECOSequenceMiniAOD(process):
                                                modifierConfig = cms.PSet( modifications = egamma_modifications )
                                                )
 
-    process.egammaScaleSmearTask = cms.Task( process.calibratedPatPhotons, process.slimmedOOTPhotons )
+    process.ootPhotonScaleSmearTask = cms.Task( process.calibratedPatPhotons, process.slimmedOOTPhotons )
 
-def setupEgammaPostRecoSeq(process):
+def setupOOTPhotonPostRecoSeq(process):
 
     from PhysicsTools.SelectorUtils.tools.vid_id_tools import switchOnVIDPhotonIdProducer,setupAllVIDIdsInModule,DataFormat,setupVIDPhotonSelection
 
@@ -50,9 +50,9 @@ def setupEgammaPostRecoSeq(process):
     for idmod in _defaultPhoIDModules:
         setupAllVIDIdsInModule(process,idmod,setupVIDPhotonSelection)
 
-    _setupEgammaPostRECOSequenceMiniAOD(process)
+    _setupOOTPhotonPostRECOSequenceMiniAOD(process)
     
-    process.egammaScaleSmearSeq = cms.Sequence( process.egammaScaleSmearTask)
-    process.egammaPostRecoSeq   = cms.Sequence( process.egammaScaleSmearSeq * process.egmPhotonIDSequence )
+    process.ootPhotonScaleSmearSeq = cms.Sequence( process.ootPhotonScaleSmearTask)
+    process.ootPhotonPostRecoSeq   = cms.Sequence( process.ootPhotonScaleSmearSeq * process.egmPhotonIDSequence )
 
     return process
